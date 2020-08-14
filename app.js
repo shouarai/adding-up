@@ -1,14 +1,18 @@
 'use strict';
+//fsモジュール読み込み ファイルを扱う filesystem
 const fs = require('fs');
+
+//readlineモジュール読み込み ファイルを一行ずつ読み込むため
 const readline = require('readline');
+
 const rs = fs.createReadStream('./popu-pref.csv');
 const rl = readline.createInterface({ 'input': rs, 'output': {} });
 const prefectureDataMap = new Map(); // key: 都道府県 value: 集計データのオブジェクト
 rl.on('line', (lineString) => {
     const columns = lineString.split(',');
-    const year = parseInt(columns[0]);
+    const year = parseInt(columns[0]); //parseInt文字列を整数値に変換
     const prefecture = columns[1];
-    const popu = parseInt(columns[3]);
+    const popu = parseInt(columns[3]); //parseInt文字列を整数値に変換
     if (year === 2010 || year === 2015) {
         let value = prefectureDataMap.get(prefecture);
         if (!value) {
@@ -38,4 +42,5 @@ rl.on('close', () => {
         return key + ': ' + value.popu10 + '=>' + value.popu15 + ' 変化率:' + value.change;
     });
     console.log(rankingStrings);
+    // console.log(prefectureDataMap);
 });
